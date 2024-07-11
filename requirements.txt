@@ -398,3 +398,7 @@ zict @ file:///C:/b/abs_780gyydtbp/croot/zict_1695832899404/work
 zipp @ file:///C:/b/abs_b0beoc27oa/croot/zipp_1704206963359/work
 zope.interface @ file:///C:/ci_311/zope.interface_1676439868776/work
 zstandard @ file:///C:/b/abs_e46tf0_91g/croot/zstandard_1714678303615/work
+
+pandas~=2.2.1
+numpy~=1.26.4
+plotly~=5.19.0
