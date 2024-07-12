@@ -81,7 +81,7 @@ def main():
     st.header('Inner look on Israel, and International comparison')
 
     # Load data
-    teachers_salary_path = 'https://github.com/AmitaiKellerman/VisualizationProject/blob/main/merged_data.csv'
+    teachers_salary_path = 'merged_data.csv'
     teachers_salary_df = load_data(teachers_salary_path)
 
     countries_list = teachers_salary_df['Country or Area'].unique().tolist()
