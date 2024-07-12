@@ -51,6 +51,7 @@ import plotly.express as px
 # Constants
 EDUCATION_ORDER = ['Pre-primary education', 'Primary education', 'Lower secondary general education', 'Upper secondary general education']
 EXPERIENCE_ORDER = ['No Experiance', '10 years of Experiance', '15 years of Experiance', 'Maximum Experiance']
+MEASURE_ORDER = ['Statutory teaching time', 'Statutory working time required at school', 'Total statutory working time']
 
 
 def load_data(file_path):
@@ -66,12 +67,15 @@ def update_figure(df, country, qualification):
 
     # Plotting
     fig1 = px.line(filtered_df, x='Education level', y='Actual Salary per Hour', color='Experience Level',
-                   facet_col='Measure', category_orders={'Education level': EDUCATION_ORDER})
-    fig1.update_layout(title=f'Actual Salary per Hour in {country}')
+                   facet_col='Measure', facet_col_spacing=0.03, category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER})
+    fig1.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+    fig1.update_layout(title=f'Actual Salary per Hour in {country}',
+                       legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.35, traceorder='reversed'))
 
     fig2 = px.histogram(df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
                         histfunc='avg', barmode='group', facet_row='Measure')
-    fig2.update_layout(title='International Comparison of Actual Salary per Hour', xaxis={'categoryorder':'total descending'})
+    fig2.update_layout(title='International Comparison of Actual Salary per Hour',
+                       xaxis={'categoryorder': 'total descending'})
 
     return fig1, fig2
 
