@@ -105,7 +105,7 @@ def main():
     qualification = filters.radio('Select Qualification:', teachers_salary_df['Qualification level'].unique())
 
     country, international = update_figure(teachers_salary_df, view_option, qualification)
-    st.plotly_chart(country)
+    st.plotly_chart(country, config={'displayModeBar': False})
     st.plotly_chart(international)
 
 
