@@ -69,11 +69,25 @@ def update_figure(df, country, qualification):
     fig1 = px.line(filtered_df, x='Education level', y='Actual Salary per Hour', color='Experience Level',
                    facet_col='Measure', facet_col_spacing=0.03, width=1200, height=400,
                    category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER},
-                   color_discrete_map={'No Experience': '#feedde',
-                                       '10 years of Experience': '#fdbe85',
+                   color_discrete_map={'No Experience': '#ffffb2',
+                                       '10 years of Experience': '#fecc5c',
                                        '15 years of Experience': '#fd8d3c',
-                                       'Maximum Experience': '#d94701'})
+                                       'Maximum Experience': '#e31a1c'})
+    # Remove '=' from the annotation text
     fig1.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+    # turn off axis title of x axis
+    fig1.for_each_xaxis(lambda x: x.update({'title': ''}))
+    # add annotations
+    fig1.add_annotation(
+        showarrow=False,
+        xanchor='center',
+        xref='paper',
+        x=0.5,
+        yref='paper',
+        y=-0.7,
+        text='Education level',
+        font=dict(size=20)
+    )
     fig1.update_layout(title=f'Actual Salary per Hour in {country}',
                        legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.18, traceorder='reversed'))
 
