@@ -50,7 +50,7 @@ import plotly.express as px
 
 # Constants
 EDUCATION_ORDER = ['Pre-primary education', 'Primary education', 'Lower secondary general education', 'Upper secondary general education']
-EXPERIENCE_ORDER = ['No Experiance', '10 years of Experiance', '15 years of Experiance', 'Maximum Experiance']
+EXPERIENCE_ORDER = ['No Experience', '10 years of Experience', '15 years of Experience', 'Maximum Experience']
 MEASURE_ORDER = ['Statutory teaching time', 'Statutory working time required at school', 'Total statutory working time']
 
 
@@ -67,10 +67,15 @@ def update_figure(df, country, qualification):
 
     # Plotting
     fig1 = px.line(filtered_df, x='Education level', y='Actual Salary per Hour', color='Experience Level',
-                   facet_col='Measure', facet_col_spacing=0.03, category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER})
+                   facet_col='Measure', facet_col_spacing=0.03, width=1200, height=400,
+                   category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER},
+                   color_discrete_map={'No Experience': '#feedde',
+                                       '10 years of Experience': '#fdbe85',
+                                       '15 years of Experience': '#fd8d3c',
+                                       'Maximum Experience': '#d94701'})
     fig1.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
     fig1.update_layout(title=f'Actual Salary per Hour in {country}',
-                       legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.35, traceorder='reversed'))
+                       legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.18, traceorder='reversed'))
 
     fig2 = px.histogram(df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
                         histfunc='avg', barmode='group', facet_row='Measure')
