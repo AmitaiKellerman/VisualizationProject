@@ -77,6 +77,7 @@ def update_figure(df, country, qualification):
     fig1.update_layout(title=f'Actual Salary per Hour in {country}',
                        legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.18, traceorder='reversed'))
 
+    # International comparison visualization
     fig2 = px.histogram(df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
                         histfunc='avg', barmode='group', facet_row='Measure')
     fig2.update_layout(title='International Comparison of Actual Salary per Hour',
