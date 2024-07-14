@@ -86,7 +86,7 @@ def update_figure(df, country, qualification):
 
 
 def main():
-    st.set_page_config(layout="wide")
+    st.set_page_config(layout="wide", initial_sidebar_state='collapsed')
     st.title('Teacher Salary Analysis')
     st.header('Inner look on Israel, and International comparison')
 
