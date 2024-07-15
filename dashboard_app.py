@@ -110,11 +110,60 @@ def update_figure(df, country, qualification):
         'Maximum Experience': '#7f2704'
     }
 
-    # International comparison visualization
+    # Plotting the histogram with facets - International Comparison
     fig2 = px.histogram(df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
-                        histfunc='avg', barmode='group', facet_row='Measure')
-    fig2.update_layout(title='International Comparison of Actual Salary per Hour',
-                       xaxis={'categoryorder': 'total descending'})
+                        histfunc='avg', barmode='group',
+                        facet_row='Measure',  # Use facet_row to arrange them vertically
+                        category_orders={'Measure': MEASURE_ORDER},
+                        height=600, width=1500,
+                        color_discrete_map=color_discrete_map)  # Adjusted dimensions for vertical layout
+
+    # Update layout and legend
+    fig2.update_layout(
+        title='International Comparison of Actual Salary per Hour',
+        xaxis=dict(title='Country or Area', tickangle=-45),
+        legend=dict(
+            title='Experience Level',
+            orientation="h",
+            x=0.5,  # Center position on the x-axis
+            xanchor="center",  # Anchor point for centering
+            y=-0.4,  # Position on the y-axis just below the plot
+            yanchor="top"  # Anchor point at the top of the legend
+        ),
+        margin=dict(l=90, r=250, t=100, b=150)
+    )
+
+    # Adjusting annotations for facet titles
+    for annotation in fig2.layout.annotations:
+        annotation.update(textangle=0)  # Set text angle to 0 (horizontal)
+        annotation.font.size = 12
+        annotation.text = annotation.text.replace('Measure=', '<b>Measure</b><br>')
+        annotation.xref = 'paper'  # Reference the entire paper for positioning
+        annotation.align = 'center'  # Center align the text
+
+    fig2.layout.annotations[0].x = 1.06  # Center the annotation horizontally
+    fig2.layout.annotations[1].x = 1.01  # Center the annotation horizontally
+    fig2.layout.annotations[2].x = 1.07  # Center the annotation horizontally
+
+    # Clear all y-axis titles
+    fig2.update_yaxes(title_text='', showticklabels=True)
+
+    # Add an annotation for the y-axis title in the middle of the plot
+    fig2.add_annotation(
+        text='Average Actual Salary per Hour',  # Y-axis Title
+        xref='paper', yref='paper',
+        x=-0.1, y=0.5,  # Position the annotation in the middle of the plot
+        showarrow=False,
+        textangle=-90,  # Vertical text
+        font=dict(size=12, color='gray')
+    )
+
+    # Customize tick labels to bold 'Israel'
+    tickvals = df['Country or Area'].unique()
+    ticktext = ['<b style="color:black; font-size:16px;">{}</b>'.format(country) if country == 'Israel' else country for country in tickvals]
+
+    # Update x-axis tick labels
+    fig2.update_xaxes(tickmode='array', tickvals=tickvals, ticktext=ticktext)
 
     return fig1, fig2
 
