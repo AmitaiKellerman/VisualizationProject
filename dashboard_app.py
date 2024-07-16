@@ -82,7 +82,7 @@ def update_figure(df, country, qualification):
 
     # fig 1
     fig1 = px.line(filtered_df, x='Education level', y='Actual Salary per Hour', color='Experience Level',
-                   facet_col='Measure', facet_col_spacing=0.1,
+                   facet_col='Measure', facet_col_spacing=0.138,
                    width=2000, height=400,
                    category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER},
                    color_discrete_map=color_discrete_map)
@@ -116,8 +116,8 @@ def update_figure(df, country, qualification):
         annotation.text = annotation.text.replace('Measure=', '<b>Measure</b><br>')
 
     fig1.update_layout(
-        title=f'Actual Salary per Hour in {country}',
-        legend=dict(yanchor='bottom', y=0.01, xanchor='right', x=1.18, traceorder='reversed', ),
+        title=f'Actual Salary per Hour in {country} (USD)',
+        legend=dict(yanchor='bottom', y=-0.02, xanchor='right', x=1.2, traceorder='reversed', ),
         margin=dict(t=100, b=150)  # Adjust the bottom margin to ensure space for the annotation
     )
 
@@ -195,7 +195,7 @@ def main():
     israel_index = countries.index('Israel')
 
     qualification_levels = teachers_salary_df['Qualification level'].unique().tolist()
-    Minimum_qualification_index = qualification_levels.index('Minimum qualification at this stage of career')
+    minimum_qualification_index = qualification_levels.index('Minimum qualification at this stage of career')
 
     # Store the initial value of widgets in session state
     if "visibility" not in st.session_state:
@@ -212,7 +212,7 @@ def main():
     # User Interface - Choose qualification Level
     with col2:
         st.write("**:orange-background[Which Qualification would you like to see?]** :mortar_board:")
-        qualification = st.selectbox('', qualification_levels, Minimum_qualification_index, label_visibility='collapsed')
+        qualification = st.selectbox('', qualification_levels, minimum_qualification_index, label_visibility='collapsed')
         # st.markdown(f":orange[**{qualification}**] is selected")
 
     # Update and present the figures
