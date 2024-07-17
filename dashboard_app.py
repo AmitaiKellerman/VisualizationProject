@@ -125,23 +125,21 @@ def update_figure(df, country, qualification):
         margin=dict(t=100, b=150)  # Adjust the bottom margin to ensure space for the annotation
     )
 
-    # fig 2
-
     return fig1
 
 
-def update_international_figure(df, measure):
+def update_international_figure(df, measure, experience_level='Maximum Experience'):
     df = prepare_data_for_fig2(df)
     filtered_df = df[df['Measure'] == measure]
     # Plotting the histogram with facets - International Comparison
-    fig = px.histogram(filtered_df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
-                       histfunc='avg', barmode='group',
-                       category_orders={'Experience Level': EXPERIENCE_ORDER[::-1]},
-                       height=600, width=1500,
-                       color_discrete_map=COLOR_DISCRETE_MAP)  # Adjusted dimensions for vertical layout
+    comparison = px.histogram(filtered_df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
+                              histfunc='avg', barmode='group',
+                              category_orders={'Experience Level': EXPERIENCE_ORDER[::-1]},
+                              height=600, width=1500,
+                              color_discrete_map=COLOR_DISCRETE_MAP)  # Adjusted dimensions for vertical layout
 
     # Update layout and legend
-    fig.update_layout(
+    comparison.update_layout(
         title='International Comparison of Actual Salary per Hour',
         xaxis=dict(title='Country or Area', tickangle=-45),
         legend=dict(
@@ -163,15 +161,15 @@ def update_international_figure(df, measure):
     #     annotation.xref = 'paper'  # Reference the entire paper for positioning
     #     annotation.align = 'center'  # Center align the text
     #
-    # fig.layout.annotations[0].x = 1.09  # Center the annotation horizontally
-    # fig.layout.annotations[1].x = 1.04  # Center the annotation horizontally
-    # fig.layout.annotations[2].x = 1.09  # Center the annotation horizontally
+    # comparison.layout.annotations[0].x = 1.09  # Center the annotation horizontally
+    # comparison.layout.annotations[1].x = 1.04  # Center the annotation horizontally
+    # comparison.layout.annotations[2].x = 1.09  # Center the annotation horizontally
 
     # Clear all y-axis titles
-    fig.update_yaxes(title_text='', showticklabels=True)
+    comparison.update_yaxes(title_text='', showticklabels=True)
 
     # Add an annotation for the y-axis title in the middle of the plot
-    fig.add_annotation(
+    comparison.add_annotation(
         text='Actual Salary per Hour',  # Y-axis Title
         xref='paper', yref='paper',
         x=-0.1, y=0.5,  # Position the annotation in the middle of the plot
@@ -186,9 +184,9 @@ def update_international_figure(df, measure):
                 country in tickvals]
 
     # Update x-axis tick labels
-    fig.update_xaxes(tickmode='array', tickvals=tickvals, ticktext=ticktext)
+    comparison.update_xaxes(tickmode='array', tickvals=tickvals, ticktext=ticktext)
 
-    return fig
+    return comparison
 
 
 def main():
