@@ -53,6 +53,12 @@ EDUCATION_ORDER = ['Pre-primary education', 'Primary education', 'Lower secondar
                    'Upper secondary general education']
 EXPERIENCE_ORDER = ['No Experience', '10 years of Experience', '15 years of Experience', 'Maximum Experience']
 MEASURE_ORDER = ['Statutory teaching time', 'Statutory working time required at school', 'Total statutory working time']
+COLOR_DISCRETE_MAP = {
+    'No Experience': '#fdd0a2',
+    '10 years of Experience': '#fd8d3c',
+    '15 years of Experience': '#d94801',
+    'Maximum Experience': '#7f2704'
+}
 
 
 def load_data(file_path):
@@ -60,32 +66,30 @@ def load_data(file_path):
 
 
 def prepare_data_for_fig2(df):
-    grouped_df = df.groupby(['Country or Area', 'Experience Level', 'Measure'], as_index=False)['Actual Salary per Hour'].mean()
-    grouped_df['avg_salary_per_measure'] = grouped_df.groupby(['Country or Area', 'Measure'])['Actual Salary per Hour'].transform('mean')
-    sorted_df = grouped_df.sort_values(by=['Measure', 'avg_salary_per_measure', 'Experience Level'], ascending=[True, False, True])
+    grouped_df = df.groupby(['Country or Area', 'Experience Level', 'Measure'], as_index=False)[
+        'Actual Salary per Hour'].mean()
+    grouped_df['avg_salary_per_measure'] = grouped_df.groupby(['Country or Area', 'Measure'])[
+        'Actual Salary per Hour'].transform('mean')
+    sorted_df = grouped_df.sort_values(by=['Measure', 'avg_salary_per_measure', 'Experience Level'],
+                                       ascending=[True, False, True])
     return sorted_df
 
 
 def update_figure(df, country, qualification):
     # Filter data by country and qualification
     filtered_df = df[(df['Country or Area'] == country) & (df['Qualification level'] == qualification)]
-    filtered_df['Education level'] = pd.Categorical(filtered_df['Education level'], categories=EDUCATION_ORDER, ordered=True)
-    filtered_df['Experience Level'] = pd.Categorical(filtered_df['Experience Level'], categories=EXPERIENCE_ORDER, ordered=True)
+    filtered_df['Education level'] = pd.Categorical(filtered_df['Education level'], categories=EDUCATION_ORDER,
+                                                    ordered=True)
+    filtered_df['Experience Level'] = pd.Categorical(filtered_df['Experience Level'], categories=EXPERIENCE_ORDER,
+                                                     ordered=True)
     filtered_df = filtered_df.sort_values(by=['Education level', 'Experience Level'])
-
-    color_discrete_map = {
-        'No Experience': '#fdd0a2',
-        '10 years of Experience': '#fd8d3c',
-        '15 years of Experience': '#d94801',
-        'Maximum Experience': '#7f2704'
-    }
 
     # fig 1
     fig1 = px.line(filtered_df, x='Education level', y='Actual Salary per Hour', color='Experience Level',
                    facet_col='Measure', facet_col_spacing=0.138,
                    width=2000, height=400,
                    category_orders={'Education level': EDUCATION_ORDER, 'Measure': MEASURE_ORDER},
-                   color_discrete_map=color_discrete_map)
+                   color_discrete_map=COLOR_DISCRETE_MAP)
     fig1.update_traces(line=dict(width=3.5))
 
     # Modifying tick labels to be multi-line
@@ -122,17 +126,22 @@ def update_figure(df, country, qualification):
     )
 
     # fig 2
-    fig2_df = prepare_data_for_fig2(df)
+
+    return fig1
+
+
+def update_international_figure(df, measure):
+    df = prepare_data_for_fig2(df)
+    filtered_df = df[df['Measure'] == measure]
     # Plotting the histogram with facets - International Comparison
-    fig2 = px.histogram(fig2_df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
-                        histfunc='avg', barmode='group',
-                        facet_row='Measure',  # Use facet_row to arrange them vertically
-                        category_orders={'Measure': MEASURE_ORDER, 'Experience Level': EXPERIENCE_ORDER[::-1]},
-                        height=600, width=1500,
-                        color_discrete_map=color_discrete_map)  # Adjusted dimensions for vertical layout
+    fig = px.histogram(filtered_df, x='Country or Area', y='Actual Salary per Hour', color='Experience Level',
+                       histfunc='avg', barmode='group',
+                       category_orders={'Experience Level': EXPERIENCE_ORDER[::-1]},
+                       height=600, width=1500,
+                       color_discrete_map=COLOR_DISCRETE_MAP)  # Adjusted dimensions for vertical layout
 
     # Update layout and legend
-    fig2.update_layout(
+    fig.update_layout(
         title='International Comparison of Actual Salary per Hour',
         xaxis=dict(title='Country or Area', tickangle=-45),
         legend=dict(
@@ -146,23 +155,23 @@ def update_figure(df, country, qualification):
         margin=dict(l=90, r=250, t=100, b=150)
     )
 
-    # Adjusting annotations for facet titles
-    for annotation in fig2.layout.annotations:
-        annotation.update(textangle=0)  # Set text angle to 0 (horizontal)
-        annotation.font.size = 12
-        annotation.text = annotation.text.replace('Measure=', '<b>Measure</b><br>')
-        annotation.xref = 'paper'  # Reference the entire paper for positioning
-        annotation.align = 'center'  # Center align the text
-
-    fig2.layout.annotations[0].x = 1.09  # Center the annotation horizontally
-    fig2.layout.annotations[1].x = 1.04  # Center the annotation horizontally
-    fig2.layout.annotations[2].x = 1.09  # Center the annotation horizontally
+    # # Adjusting annotations for facet titles
+    # for annotation in fig.layout.annotations:
+    #     annotation.update(textangle=0)  # Set text angle to 0 (horizontal)
+    #     annotation.font.size = 12
+    #     annotation.text = annotation.text.replace('Measure=', '<b>Measure</b><br>')
+    #     annotation.xref = 'paper'  # Reference the entire paper for positioning
+    #     annotation.align = 'center'  # Center align the text
+    #
+    # fig.layout.annotations[0].x = 1.09  # Center the annotation horizontally
+    # fig.layout.annotations[1].x = 1.04  # Center the annotation horizontally
+    # fig.layout.annotations[2].x = 1.09  # Center the annotation horizontally
 
     # Clear all y-axis titles
-    fig2.update_yaxes(title_text='', showticklabels=True)
+    fig.update_yaxes(title_text='', showticklabels=True)
 
     # Add an annotation for the y-axis title in the middle of the plot
-    fig2.add_annotation(
+    fig.add_annotation(
         text='Actual Salary per Hour',  # Y-axis Title
         xref='paper', yref='paper',
         x=-0.1, y=0.5,  # Position the annotation in the middle of the plot
@@ -173,12 +182,13 @@ def update_figure(df, country, qualification):
 
     # Customize tick labels to bold 'Israel'
     tickvals = df['Country or Area'].unique()
-    ticktext = ['<b style="color:black; font-size:16px;">{}</b>'.format(country) if country == 'Israel' else country for country in tickvals]
+    ticktext = ['<b style="color:black; font-size:16px;">{}</b>'.format(country) if country == 'Israel' else country for
+                country in tickvals]
 
     # Update x-axis tick labels
-    fig2.update_xaxes(tickmode='array', tickvals=tickvals, ticktext=ticktext)
+    fig.update_xaxes(tickmode='array', tickvals=tickvals, ticktext=ticktext)
 
-    return fig1, fig2
+    return fig
 
 
 def main():
@@ -212,12 +222,17 @@ def main():
     # User Interface - Choose qualification Level
     with col2:
         st.write("**:orange-background[Which Qualification would you like to see?]** :mortar_board:")
-        qualification = st.selectbox('', qualification_levels, minimum_qualification_index, label_visibility='collapsed')
+        qualification = st.selectbox('', qualification_levels, minimum_qualification_index,
+                                     label_visibility='collapsed')
         # st.markdown(f":orange[**{qualification}**] is selected")
 
-    # Update and present the figures
-    country_fig, international_fig = update_figure(teachers_salary_df, country, qualification)
+    # Update and present the figure of the selected country
+    country_fig = update_figure(teachers_salary_df, country, qualification)
     st.plotly_chart(country_fig)
+
+    # Update and present the international comparison figure
+    selected_measure = st.radio('Choose Measure to view comparison:', MEASURE_ORDER, index=0)
+    international_fig = update_international_figure(teachers_salary_df, selected_measure)
     st.plotly_chart(international_fig)
 
 
