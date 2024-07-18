@@ -125,6 +125,9 @@ def update_figure(df, country, qualification):
         margin=dict(t=100, b=150)  # Adjust the bottom margin to ensure space for the annotation
     )
 
+    # show y-axis values for each facet
+    fig1.update_yaxes(showticklabels=True)
+
     return fig1
 
 
