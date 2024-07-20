@@ -100,13 +100,13 @@ def update_international_figure(df, measure, experience_level='Maximum Experienc
     # Update layout and legend
     comparison.update_layout(
         title='International Comparison of Actual Salary (USD) per Hour',
-        xaxis=dict(title='Country or Area', tickangle=-45),
+        xaxis=dict(title='Country or Area', tickangle=-45, categoryorder='mean descending'),
         legend=dict(
             title='Experience Level',
             orientation="h",
-            x=0.5,  # Center position on the x-axis
-            xanchor="center",  # Anchor point for centering
-            y=-0.4,  # Position on the y-axis just below the plot
+            x=0.99,  # Center position on the x-axis
+            xanchor="right",  # Anchor point for centering
+            y=0.88,  # Position on the y-axis just below the plot
             yanchor="top"  # Anchor point at the top of the legend
         ),
         margin=dict(l=90, r=80, t=35, b=150)
@@ -140,7 +140,7 @@ def update_international_figure(df, measure, experience_level='Maximum Experienc
 def main():
     st.set_page_config(layout="wide", initial_sidebar_state='collapsed')
     st.title('Teacher Salary Analysis')
-    st.header('*Inner look on Israel, and International comparison*')
+    st.header('Inner look on Israel, and International comparison')
 
     # Load data
     teachers_salary_path = 'merged_data.csv'
@@ -162,16 +162,16 @@ def main():
         col1, col2 = st.columns(2)
         # User Interface - Choose Country
         with col1:
-            st.write("**:orange-background[Want to see the Actual salary in other countries?]** :earth_americas:")
+            st.write(":orange-background[Want to see the Actual salary in other countries?]** :earth_americas:")
             country = st.selectbox('', countries, index=israel_index, label_visibility='collapsed')
-            st.markdown(f":orange[**{country}**] is selected")
+            st.markdown(f":orange[{country}] is selected")
 
         # User Interface - Choose qualification Level
         with col2:
-            st.write("**:orange-background[Which Qualification would you like to see?]** :mortar_board:")
+            st.write(":orange-background[Which Qualification would you like to see?]** :mortar_board:")
             qualification = st.selectbox('', qualification_levels, minimum_qualification_index,
                                          label_visibility='collapsed')
-            st.markdown(f":orange[**{qualification}**] is selected")
+            st.markdown(f":orange[{qualification}] is selected")
 
         # Update and present the figure of the selected country
         country_fig = update_figure(teachers_salary_df, country, qualification)
@@ -180,9 +180,9 @@ def main():
     container2 = st.container(border=True)
     with container2:
         # Update and present the international comparison figure
-        st.write("**:orange-background[Want to see the Actual salary by Measure?]** :chart_with_downwards_trend:")
+        st.write(":orange-background[Want to see the Actual salary by Measure?]** :chart_with_downwards_trend:")
         selected_measure = st.radio('', MEASURE_ORDER, index=0, label_visibility='collapsed')
-        st.markdown(f":orange[**{selected_measure}**] is selected")
+        st.markdown(f":orange[{selected_measure}] is selected")
         st.write(' ')
         st.write(' ')
         international_fig = update_international_figure(teachers_salary_df, selected_measure)
