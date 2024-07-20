@@ -162,13 +162,13 @@ def main():
         col1, col2 = st.columns(2)
         # User Interface - Choose Country
         with col1:
-            st.write(":orange-background[Want to see the Actual salary in other countries?]** :earth_americas:")
+            st.write("**:orange-background[Want to see the Actual salary in other countries?]** :earth_americas:")
             country = st.selectbox('', countries, index=israel_index, label_visibility='collapsed')
             st.markdown(f":orange[{country}] is selected")
 
         # User Interface - Choose qualification Level
         with col2:
-            st.write(":orange-background[Which Qualification would you like to see?]** :mortar_board:")
+            st.write("**:orange-background[Which Qualification would you like to see?]** :mortar_board:")
             qualification = st.selectbox('', qualification_levels, minimum_qualification_index,
                                          label_visibility='collapsed')
             st.markdown(f":orange[{qualification}] is selected")
