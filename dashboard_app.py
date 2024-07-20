@@ -180,7 +180,7 @@ def main():
     container2 = st.container(border=True)
     with container2:
         # Update and present the international comparison figure
-        st.write(":orange-background[Want to see the Actual salary by Measure?]** :chart_with_downwards_trend:")
+        st.write("**:orange-background[Want to see the Actual salary by Measure?]** :chart_with_downwards_trend:")
         selected_measure = st.radio('', MEASURE_ORDER, index=0, label_visibility='collapsed')
         st.markdown(f":orange[{selected_measure}] is selected")
         st.write(' ')
